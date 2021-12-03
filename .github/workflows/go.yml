@@ -1,0 +1,26 @@
+name: Go
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Build and run
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.13
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Build and run
+      run: for d in $(find Day*/ -maxdepth 1 -type d | sort); do printf "\n┌-------------┐\n| $d     |\n└-------------┘\n"; cd "$d"; for f in $(find day* | sort); do printf "$f =  "; time go run $f|| exit 1; sleep 1s; printf "\n"; done; cd ../; done;
+
+
